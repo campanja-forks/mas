@@ -111,9 +111,6 @@ initialize_subscriptions(Islands, Cf = #config{write_interval = Int}) ->
     exometer_admin:set_default(['_'],
                                mas_vm_probe,
                                [{module, mas_vm_probe}]),
-    exometer:new([global, scheduler_wt],
-                 mas_vm_probe,
-                 [{sample_interval, Int}]),
     exometer_report:subscribe(mas_reporter,
                               [global, scheduler_wt],
                               scheduler_wt,
@@ -122,7 +119,6 @@ initialize_subscriptions(Islands, Cf = #config{write_interval = Int}) ->
     Stats = determine_behaviours(Cf),
     [begin
          Metric = [I, S],
-         exometer:new(Metric, counter),
          exometer_report:subscribe(mas_reporter, Metric, value, Int)
      end || S <- Stats, I <- Islands].
 
